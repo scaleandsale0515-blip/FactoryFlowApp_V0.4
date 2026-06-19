@@ -74,7 +74,7 @@ class _ArchivesScreenState extends State<ArchivesScreen> {
                         if (isActive) InfoChip(label: AppStrings.get('active_cycle'), color: AppColors.success),
                       ]),
                       const SizedBox(height: 8),
-                      FutureBuilder<FileStat>(future: file.exists().then((e) => e ? file.stat() : Future.value(FileStat.fromSync('/'))), builder: (ctx, snap) {
+                      FutureBuilder<FileStat>(future: file.exists().then((e) => e ? file.stat() : Future.value(FileStat.statSync('/'))), builder: (ctx, snap) {
                         final size = snap.data != null ? '${(snap.data!.size / 1024).toStringAsFixed(0)} KB' : '...';
                         return Text('${DateFormat('dd MMM').format(DateTime.parse(c['start_date']))} - ${DateFormat('dd MMM yyyy').format(DateTime.parse(c['end_date']))}  ·  $size', style: const TextStyle(fontSize: 11, color: Colors.grey));
                       }),
