@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:crypto/crypto.dart';
 import 'package:factoryflow/services/settings_service.dart';
-import 'package:factoryflow/utils/app_colors.dart';
+//import 'package:factoryflow/utils/app_colors.dart';
+import 'package:factoryflow/utils/app_theme.dart';
 import 'package:factoryflow/utils/app_strings.dart';
 
 class AdminLockScreen extends StatefulWidget {
