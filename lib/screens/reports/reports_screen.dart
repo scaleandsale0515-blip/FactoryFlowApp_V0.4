@@ -1,9 +1,9 @@
 import 'dart:io';
+import 'package:excel/excel.dart';
 import 'package:flutter/material.dart' hide Border;
 import 'package:fl_chart/fl_chart.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:excel/excel.dart';
 import 'package:share_plus/share_plus.dart';
 import '../../database/database_helper.dart';
 import '../../utils/app_theme.dart';
@@ -128,17 +128,17 @@ class _ReportsScreenState extends State<ReportsScreen> {
       final sheet = excel['Report'];
 
       sheet.appendRow([
-        TextCellValue('Period'),
-        TextCellValue('Sales ₹'),
-        TextCellValue('Purchase ₹'),
-        TextCellValue('Panel Production'),
-        TextCellValue('Column Production'),
-        TextCellValue('Transport Cost ₹'),
+        CellValue('Period'),
+        CellValue('Sales ₹'),
+        CellValue('Purchase ₹'),
+        CellValue('Panel Production'),
+        CellValue('Column Production'),
+        CellValue('Transport Cost ₹'),
       ]);
 
       for (int i = 0; i < _labels.length; i++) {
         sheet.appendRow([
-          TextCellValue(_labels[i]),
+          CellValue(_labels[i]),
           _num(_salesD[i]),
           _num(_purchD[i]),
           _num(_panelD[i]),
@@ -221,7 +221,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                             : Colors.transparent,
                         borderRadius:
                             BorderRadius.circular(8),
-                        border: Border.all(
+                        border: pw.Border.all(
                           color: _gf == f
                               ? AppColors.primary
                               : AppColors.darkBorder,
