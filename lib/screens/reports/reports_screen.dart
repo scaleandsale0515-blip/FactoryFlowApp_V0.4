@@ -130,17 +130,17 @@ class _ReportsScreenState extends State<ReportsScreen> {
       final sheet = excel['Report'];
 
       sheet.appendRow([
-         TextCellValue('Period'),
-         TextCellValue('Sales ₹'),
-         TextCellValue('Purchase ₹'),
-         TextCellValue('Panel Production'),
-         TextCellValue('Column Production'),
-         TextCellValue('Transport Cost ₹'),
+         'Period',
+         'Sales ₹',
+         'Purchase ₹',
+         'Panel Production',
+         'Column Production',
+         'Transport Cost ₹',
       ]);
 
       for (int i = 0; i < _labels.length; i++) {
         sheet.appendRow([
-           TextCellValue(_labels[i]),
+           _labels[i],
           _num(_salesD[i]),
           _num(_purchD[i]),
           _num(_panelD[i]),
@@ -179,7 +179,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
     if (_loading) {
       return const Center(
           child:
-              CircularProgressIndicator(color: AppColors.primary));
+              CircularProgressIndicator(color: PdfColor.fromInt(AppColors.primary.value)));
     }
 
     return SingleChildScrollView(
@@ -223,7 +223,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
                             : Colors.transparent,
                         borderRadius:
                             BorderRadius.circular(8),
-                        border: pw.Border.all(
+                        border: Border.all(
                           color: _gf == f
                               ? AppColors.primary
                               : AppColors.darkBorder,
