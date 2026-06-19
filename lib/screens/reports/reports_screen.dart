@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:excel/excel.dart';
+import 'package:excel/excel.dart' as ex;
 //import 'package:flutter/material.dart' hide Border;
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -127,7 +127,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
     setState(() => _exporting = true);
 
     try {
-      final excel = Excel.createExcel();
+      final excel = ex.Excel.createExcel();
       final sheet = excel['Report'];
 
       sheet.appendRow([
@@ -180,8 +180,10 @@ class _ReportsScreenState extends State<ReportsScreen> {
     if (_loading) {
       return const Center(
           child:
-              CircularProgressIndicator(AppColors.primary.value);
-    }
+              CircularProgressIndicator(
+                   color: AppColors.primary,
+                  );
+                 }
 
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
