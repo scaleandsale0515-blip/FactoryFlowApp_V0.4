@@ -7,8 +7,16 @@ import '../../utils/app_theme.dart';
 import '../../utils/app_strings.dart';
 import '../../widgets/common_widgets.dart';
 
+//class ArchivesScreen extends StatefulWidget {
+//  const ArchivesScreen({super.key});
+//  @override
+//  State<ArchivesScreen> createState() => _ArchivesScreenState();
+//}
 class ArchivesScreen extends StatefulWidget {
-  const ArchivesScreen({super.key});
+  final Map<String, dynamic> cycle; // ✅ ADD THIS
+
+  const ArchivesScreen({Key? key, required this.cycle}) : super(key: key);
+
   @override
   State<ArchivesScreen> createState() => _ArchivesScreenState();
 }
