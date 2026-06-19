@@ -97,7 +97,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
         // Force expire by checking rotate after marking inactive — handled internally
       }
       await ExcelService.instance.checkAndRotate();
-      if (mounted) ScaffoldMessenger.of(context).showSnackBar(Text(AppStrings.get('cycle_started')));
+      if (mounted) ScaffoldMessenger.of(context).showSnackBar(
+  SnackBar(
+    content: Text(AppStrings.get('cycle_started')),
+    backgroundColor: Colors.green,
+    behavior: SnackBarBehavior.floating,
+  ),
+);
     }
   }
 
