@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:excel/excel.dart';
-import 'package:flutter/material.dart' hide Border;
+//import 'package:flutter/material.dart' hide Border;
+import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
@@ -179,7 +180,7 @@ class _ReportsScreenState extends State<ReportsScreen> {
     if (_loading) {
       return const Center(
           child:
-              CircularProgressIndicator(color: PdfColor.fromInt(AppColors.primary.value)));
+              CircularProgressIndicator(AppColors.primary.value);
     }
 
     return SingleChildScrollView(
