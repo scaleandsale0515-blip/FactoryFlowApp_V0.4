@@ -145,7 +145,7 @@ class _AddInvoiceScreenState extends State<AddInvoiceScreen> {
     final cust = await db.query('customers', where: 'id=?', whereArgs: [q['customer_id']]);
     if (cust.isNotEmpty) setState(() => _customer = cust.first);
     final its = await db.query('quotation_items', where: 'quotation_id=?', whereArgs: [q['id']]);
-    setState(() => _items = its.map((i) => {'service_ctrl': TextEditingController(text: i['service_name']), 'unit': i['unit'], 'qty_ctrl': TextEditingController(text: i['quantity'].toString()), 'rate_ctrl': TextEditingController(text: i['rate'].toString())}).toList());
+    setState(() => _items = its.map((i) => {'service_ctrl': TextEditingController(text: i['service_name']?.toString() ?? ''), 'unit': i['unit']?.toString() ?? '', 'qty_ctrl': TextEditingController(text: i['quantity']?.toString() ?? ''), 'rate_ctrl': TextEditingController(text: i['rate']?.toString() ?? ''), }).toList());
   }
 
   void _addItem() => setState(() => _items.add({'service_ctrl': TextEditingController(text: AppStrings.get('default_service')), 'unit': 'Sq Ft', 'qty_ctrl': TextEditingController(), 'rate_ctrl': TextEditingController()}));
