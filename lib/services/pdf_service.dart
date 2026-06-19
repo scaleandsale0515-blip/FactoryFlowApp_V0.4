@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
@@ -48,30 +49,142 @@ class PdfService {
     }
   }
 
-  Future<List<int>> _build(Map<String, dynamic> doc, List<Map<String, dynamic>> items, Map<String, String> s, bool isQ) async {
-    final pdf = pw.Document();
-    final orange = PdfColor.fromHex('#FF6B00');
-    final darkBg = PdfColor.fromHex('#1A1A1A');
-    final lightGrey = PdfColor.fromHex('#F5F5F0');
-    final textDark = PdfColor.fromHex('#111111');
-    final textGrey = PdfColor.fromHex('#666666');
-    final green = PdfColor.fromHex('#22C55E');
+  // ✅ NEW CODE UPDATE WITH AI.
+ Future<Uint8List> _build(
+  Map<String, dynamic> doc,
+  List<Map<String, dynamic>> items,
+  Map<String, String> s,
+  bool isQ,
+) async {
+  final pdf = pw.Document();
 
-    final company = s['company_name'] ?? 'FactoryFlow';
-    final gst = s['gst_number'] ?? '';
-    final addr = s['address'] ?? '';
-    final phone = s['phone'] ?? '';
-    final pt = s['payment_terms'] ?? '';
-    final tc = s['terms_conditions'] ?? '';
-    final docNum = isQ ? doc['quote_number'] : doc['invoice_number'];
-    final custName = doc['customer_name'] ?? '';
-    final custPhone = doc['customer_phone'] ?? '';
+  final orange = PdfColor.fromHex('#FF6B00');
+  final darkBg = PdfColor.fromHex('#1A1A1A');
+  final lightGrey = PdfColor.fromHex('#F5F5F0');
+  final textDark = PdfColor.fromHex('#111111');
+  final textGrey = PdfColor.fromHex('#666666');
+  final green = PdfColor.fromHex('#22C55E');
 
-    pw.MemoryImage? logo;
-    final logoPath = s['logo_path'] ?? '';
-    if (logoPath.isNotEmpty) {
-      try { final lf = File(logoPath); if (await lf.exists()) logo = pw.MemoryImage(await lf.readAsBytes()); } catch (_) {}
-    }
+  final company = s['company_name'] ?? 'FactoryFlow';
+  final gst = s['gst_number'] ?? '';
+  final addr = s['address'] ?? '';
+  final phone = s['phone'] ?? '';
+  final pt = s['payment_terms'] ?? '';
+  final tc = s['terms_conditions'] ?? '';
+
+  final docNum = isQ ? doc['quote_number'] : doc['invoice_number'];
+  final custName = doc['customer_name'] ?? '';
+  final custPhone = doc['customer_phone'] ?? '';
+
+  pw.MemoryImage? logo;
+  final logoPath = s['logo_path'] ?? '';
+  if (logoPath.isNotEmpty) {
+    try {
+      final lf = File(logoPath);
+      if (await lf.exists()) {
+        logo = pw.MemoryImage(await lf.readAsBytes());
+      }
+    } catch (_) {}
+  }
+
+  pdf.addPage(
+    pw.Page(
+      pageFormat: PdfPageFormat.a4,
+      margin: const pw.EdgeInsets.all(28),
+      build: (ctx) => pw.Column(
+        crossAxisAlignment: pw.CrossAxisAlignment.start,
+        children: [
+          // HEADER
+          pw.Container(
+            padding: const pw.EdgeInsets.all(18),
+            decoration: pw.BoxDecoration(
+              color: darkBg,
+              borderRadius: pw.BorderRadius.circular(8),
+            ),
+            child: pw.Row(
+              mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+              children: [
+                pw.Row(children: [
+                  if (logo != null) ...[
+                    pw.Image(logo, width: 46, height: 46),
+                    pw.SizedBox(width: 12)
+                  ],
+                  pw.Column(
+                    crossAxisAlignment: pw.CrossAxisAlignment.start,
+                    children: [
+                      pw.Text(company,
+                          style: pw.TextStyle(
+                              fontSize: 20,
+                              fontWeight: pw.FontWeight.bold,
+                              color: PdfColors.white)),
+                      if (addr.isNotEmpty)
+                        pw.Text(addr,
+                            style: pw.TextStyle(
+                                fontSize: 8,
+                                color: textGrey)), // ✅ FIXED
+                      if (phone.isNotEmpty)
+                        pw.Text(phone,
+                            style: pw.TextStyle(
+                                fontSize: 8,
+                                color: textGrey)), // ✅ FIXED
+                    ],
+                  ),
+                ]),
+                pw.Column(
+                  crossAxisAlignment: pw.CrossAxisAlignment.end,
+                  children: [
+                    pw.Container(
+                      padding: const pw.EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 5),
+                      decoration: pw.BoxDecoration(
+                        color: orange,
+                        borderRadius: pw.BorderRadius.circular(4),
+                      ),
+                      child: pw.Text(
+                        isQ ? 'QUOTATION' : 'INVOICE',
+                        style: pw.TextStyle(
+                            fontSize: 12,
+                            fontWeight: pw.FontWeight.bold,
+                            color: PdfColors.white),
+                      ),
+                    ),
+                    pw.SizedBox(height: 6),
+                    pw.Text(docNum ?? '',
+                        style: pw.TextStyle(
+                            fontSize: 10,
+                            color: PdfColors.white,
+                            fontWeight: pw.FontWeight.bold)),
+                  ],
+                ),
+              ],
+            ),
+          ),
+
+          pw.SizedBox(height: 20),
+          pw.Text('Customer: $custName'),
+          if (custPhone.isNotEmpty) pw.Text('Phone: $custPhone'),
+
+          pw.SizedBox(height: 20),
+
+          ...items.map((item) => pw.Text(
+              "${item['service_name']} - ₹${item['amount']}")),
+
+          pw.SizedBox(height: 20),
+
+          pw.Text("Total: ₹${doc['total']}",
+              style: pw.TextStyle(
+                  fontSize: 16,
+                  fontWeight: pw.FontWeight.bold,
+                  color: green)),
+        ],
+      ),
+    ),
+  );
+
+  // ✅ IMPORTANT FIX (Uint8List)
+  final bytes = await pdf.save();
+  return Uint8List.fromList(bytes);
+}
 
     pdf.addPage(pw.Page(
       pageFormat: PdfPageFormat.a4,
