@@ -110,10 +110,16 @@ class _TransporterCard extends StatelessWidget {
 }
 
 class TransporterDetailScreen extends StatefulWidget {
-  final Map<String, dynamic> transporter;
-  const TransporterDetailScreen({super.key, required this.transporter});
+  final Map<String, dynamic> trip; // ✅ ADD THIS
+
+  const TransporterDetailScreen({
+    Key? key,
+    required this.trip, // ✅ ADD THIS
+  }) : super(key: key);
+
   @override
-  State<TransporterDetailScreen> createState() => _TransporterDetailScreenState();
+  State<TransporterDetailScreen> createState() =>
+      _TransporterDetailScreenState();
 }
 
 class _TransporterDetailScreenState extends State<TransporterDetailScreen> {
@@ -427,11 +433,26 @@ Widget build(BuildContext context) {
 }
 
 class _EditTransportEntry extends StatefulWidget {
-  final Map<String, dynamic> trip; final List<Map<String, dynamic>> items;
-  const _EditTransportEntry({required this.trip, required this.items});
+  final Map<String, dynamic> trip;        // ✅ ADD
+  final List<dynamic> items;              // ✅ ADD
+
+  const _EditTransportEntry({
+    Key? key,
+    required this.trip,                  // ✅ ADD
+    required this.items,                 // ✅ ADD
+  }) : super(key: key);
+
   @override
-  State<_EditTransportEntry> createState() => _EditTransportEntryState();
-}
+  State<_EditTransportEntry> createState() =>
+      _EditTransportEntryState();
+}  
+
+  //class _EditTransportEntry extends StatefulWidget {
+  //final Map<String, dynamic> trip; final List<Map<String, dynamic>> items;
+  //const _EditTransportEntry({required this.trip, required this.items});
+  //@override
+  //State<_EditTransportEntry> createState() => _EditTransportEntryState();
+//}
 
 class _EditTransportEntryState extends State<_EditTransportEntry> {
   late DateTime _date;
