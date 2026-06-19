@@ -259,7 +259,7 @@ class _ExcelViewerScreen extends StatefulWidget {
 }
 
 class _ExcelViewerScreenState extends State<_ExcelViewerScreen> {
-  Map<String, List<List<String>>> _sheets = {};
+  Map<String, List<List<dynamic>>> _sheets = {};
   bool _loading = true;
 
   @override
@@ -272,7 +272,7 @@ class _ExcelViewerScreenState extends State<_ExcelViewerScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if (_loading) return Scaffold(appBar: AppBar(title: Text(widget.cycle['file_name'] ?? '')), body: const Center(child: CircularProgressIndicator(color: AppColors.primary)));
+    if (_loading) return Scaffold(appBar: AppBar(title: Text(widget.cycle['file_name'] ?? '')), body: const Center(child: CircularProgressIndicator()));
 
     final sheetNames = _sheets.keys.toList();
     if (sheetNames.isEmpty) return Scaffold(appBar: AppBar(title: Text(widget.cycle['file_name'] ?? '')), body: EmptyState(message: AppStrings.get('no_data')));
