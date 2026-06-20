@@ -318,16 +318,16 @@ class _EditProductionEntryState extends State<_EditProductionEntry> {
   Future<void> _save() async {
     setState(() => _saving = true);
     final db = await DatabaseHelper.instance.database;
-    final oldItems = await db.query('production_items', where: 'production_id=?', whereArgs: [widget.production['id']]);
+    final oldItems = await db.query('production_items', where: 'production_id=?', whereArgs: [widget.worker['id']]);
     await StockService.instance.applyProduction(oldItems, reverse: true);
-    await db.delete('production_items', where: 'production_id=?', whereArgs: [widget.production['id']]);
-    await db.update('production', {'date': DateFormat('yyyy-MM-dd').format(_date), 'total_amount': _total}, where: 'id=?', whereArgs: [widget.production['id']]);
+    await db.delete('production_items', where: 'production_id=?', whereArgs: [widget.worker['id']]);
+    await db.update('production', {'date': DateFormat('yyyy-MM-dd').format(_date), 'total_amount': _total}, where: 'id=?', whereArgs: [widget.worker['id']]);
     for (var item in _items) {
       final q = double.tryParse(item['qty_ctrl'].text) ?? 0; final r = double.tryParse(item['rate_ctrl'].text) ?? 0;
       if (q <= 0) continue;
       await db.insert('production_items', {'production_id': widget.production['id'], 'product_name': item['product'], 'size': item['size'], 'quantity': q, 'rate': r, 'amount': q * r});
     }
-    final newItems = await db.query('production_items', where: 'production_id=?', whereArgs: [widget.production['id']]);
+    final newItems = await db.query('production_items', where: 'production_id=?', whereArgs: [widget.worker['id']]);
     await StockService.instance.applyProduction(newItems);
     await ExcelService.instance.updateStockSheet();
     if (mounted) Navigator.pop(context);
