@@ -80,7 +80,7 @@ class _WorkersScreenState extends State<WorkersScreen> {
               : ListView.builder(padding: const EdgeInsets.fromLTRB(16, 16, 16, 80), itemCount: _workers.length,
                   itemBuilder: (ctx, i) => _WorkerCard(
                     worker: _workers[i],
-                    onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => WorkerDetailScreen(worker: _workers[i]))),
+                    onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => WorkerDetailScreen(worker: _workers[i], items: _itemsMap[_workers[i]['id']] ?? [])))),
                     onEdit: () => _addEditDialog(existing: _workers[i]),
                     onDelete: () => _delete(_workers[i]),
                   )),
@@ -111,7 +111,8 @@ class _WorkerCard extends StatelessWidget {
 // ── WORKER DETAIL — Filter by date range, full history, edit any entry ────────
 class WorkerDetailScreen extends StatefulWidget {
   final Map<String, dynamic> worker;
-  const WorkerDetailScreen({super.key, required this.worker});
+   final List items; // ✅ ADD THIS
+  const WorkerDetailScreen({super.key, required this.worker, required this.items});
   @override
   State<WorkerDetailScreen> createState() => _WorkerDetailScreenState();
 }
@@ -309,7 +310,7 @@ class _EditProductionEntryState extends State<_EditProductionEntry> {
   @override
   void initState() {
     super.initState();
-    _date = DateTime.parse(widget.prod['date']);
+    _date = DateTime.parse(widget.worker['date']);
     _items = widget.items.map((i) => {'product': i['product_name'], 'size': i['size'], 'qty_ctrl': TextEditingController(text: i['quantity'].toString()), 'rate_ctrl': TextEditingController(text: i['rate'].toString())}).toList();
   }
 
@@ -325,7 +326,7 @@ class _EditProductionEntryState extends State<_EditProductionEntry> {
     for (var item in _items) {
       final q = double.tryParse(item['qty_ctrl'].text) ?? 0; final r = double.tryParse(item['rate_ctrl'].text) ?? 0;
       if (q <= 0) continue;
-      await db.insert('production_items', {'production_id': widget.production['id'], 'product_name': item['product'], 'size': item['size'], 'quantity': q, 'rate': r, 'amount': q * r});
+      await db.insert('production_items', {'production_id': widget.worker['id'], 'product_name': item['product'], 'size': item['size'], 'quantity': q, 'rate': r, 'amount': q * r});
     }
     final newItems = await db.query('production_items', where: 'production_id=?', whereArgs: [widget.worker['id']]);
     await StockService.instance.applyProduction(newItems);
