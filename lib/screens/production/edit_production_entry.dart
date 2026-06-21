@@ -7,9 +7,9 @@ import '../../utils/app_theme.dart';
 import '../../utils/app_strings.dart';
 import '../../widgets/common_widgets.dart';
 
-class _EditProductionEntry extends StatefulWidget {
+class EditProductionEntry extends StatefulWidget {
   final Map<String, dynamic> prod; final List<Map<String, dynamic>> items;
   const _EditProductionEntry({required this.prod, required this.items});
   @override
-  State<_EditProductionEntry> createState() => _EditProductionEntryState();
+  State<EditProductionEntry> createState() => _EditProductionEntryState();
 }
