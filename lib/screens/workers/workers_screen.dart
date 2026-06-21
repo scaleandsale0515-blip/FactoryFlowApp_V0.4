@@ -298,7 +298,7 @@ Widget build(BuildContext context) {
  }
 }  
 
-//class EditProductionEntry extends StatefulWidget {
+//class EditProductionEntry extends StatefulWidget { 
 //  final Map<String, dynamic> prod; final List<Map<String, dynamic>> items;
 //  const EditProductionEntry({required this.prod, required this.items});
 //  @override
