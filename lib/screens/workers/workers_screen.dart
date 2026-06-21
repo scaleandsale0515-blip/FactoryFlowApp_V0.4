@@ -30,12 +30,12 @@ class _WorkersScreenState extends State<WorkersScreen> {
     final confirm = await showConfirmDialog(context);
     if (!confirm) return;
     final db = await DatabaseHelper.instance.database;
-    final hasProd = await db.query('production', where: 'worker_id=?', whereArgs: [widget.worker['id']], limit: 1);
+    final hasProd = await db.query('production', where: 'worker_id=?', whereArgs: [w['id']], limit: 1);
     if (hasProd.isNotEmpty) {
       if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Cannot delete — worker has production history')));
       return;
     }
-    await db.delete('workers', where: 'id=?', whereArgs: [widget.worker['id']]);
+    await db.delete('workers', where: 'id=?', whereArgs: [w['id']]);
     _load();
   }
   Future<void> _addEditDialog({Map<String, dynamic>? existing}) async {
@@ -105,7 +105,16 @@ class _WorkerCard extends StatelessWidget {
   }
 }
 
-// ── WORKER DETAIL — Filter by date range, full history, edit any entry ────────
+
+
+
+
+
+
+// ── WORKER DETAIL SCREEEENNNNNNNNNNNN — Filter by date range, full history, edit any entry ────────
+
+
+
 class WorkerDetailScreen extends StatefulWidget {
   final Map<String, dynamic> worker;
    final List items; // ✅ ADD THIS
