@@ -77,7 +77,7 @@ class _WorkersScreenState extends State<WorkersScreen> {
               : ListView.builder(padding: const EdgeInsets.fromLTRB(16, 16, 16, 80), itemCount: _workers.length,
                   itemBuilder: (ctx, i) => _WorkerCard(
                     worker: _workers[i],
-                    onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => WorkerDetailScreen(worker: _workers[i], items: _itemsMap[_workers[i]['id']] ?? []))),
+                    onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => WorkerDetailScreen(worker: _workers[i], items: []))),
                     onEdit: () => _addEditDialog(existing: _workers[i]),
                     onDelete: () => _delete(_workers[i]),
                   )),
@@ -142,7 +142,7 @@ class _WorkerDetailScreenState extends State<WorkerDetailScreen> {
   }
 
   Future<void> _editEntry(Map<String, dynamic> prod) async {
-    await Navigator.push(context, MaterialPageRoute(builder: (_) => EditProductionEntry(prod: prod, items: _itemsMap[prod['id']] ?? [])));
+    await Navigator.push(context, MaterialPageRoute(builder: (_) => EditProductionEntry(prod: prod, items: [])));
     _load();
   }
 
@@ -160,7 +160,7 @@ Widget build(BuildContext context) {
 
   return Scaffold(
     appBar: AppBar(
-      title: Text(widget.worker['name'] ?? ''),
+      title: Text(widget.prod['name'] ?? ''),
     ),
     body: _loading
         ? const Center(
@@ -308,7 +308,7 @@ class _EditProductionEntryState extends State<EditProductionEntry> {
   @override
   void initState() {
     super.initState();
-    _date = DateTime.parse(widget.worker['date']);
+    _date = DateTime.parse(widget.prod['date']);
     _items = widget.items.map((i) => {'product': i['product_name'], 'size': i['size'], 'qty_ctrl': TextEditingController(text: i['quantity'].toString()), 'rate_ctrl': TextEditingController(text: i['rate'].toString())}).toList();
   }
 
