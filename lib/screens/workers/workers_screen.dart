@@ -81,7 +81,7 @@ class _WorkersScreenState extends State<WorkersScreen> {
                     onEdit: () => _addEditDialog(existing: _workers[i]),
                     onDelete: () => _delete(_workers[i]),
                   )),
-      floatingActionButton: FloatingActionButton(onPressed: () => _addEditDialog(), backgroundColor: AppColors.primary, child: const Icon(Icons.add))
+      floatingActionButton: FloatingActionButton(onPressed: () => _addEditDialog(), backgroundColor: AppColors.primary, child: const Icon(Icons.add),),
     );
   }
 }
