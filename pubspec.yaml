@@ -14,7 +14,7 @@ dependencies:
   pdf: ^3.11.0
   printing: ^5.14.3
   excel: ^2.1.0
-  share_plus: ^9.0.0
+  share_plus: ^13.1.0
   path_provider: ^2.1.4
   permission_handler: ^11.3.1
   image_picker: ^1.1.2
