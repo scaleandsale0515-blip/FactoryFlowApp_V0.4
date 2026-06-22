@@ -61,6 +61,7 @@ android {
     buildConfig true
     }
 
+    // ✅ NEW Added using AI inside Android
   compileOptions {
     coreLibraryDesugaringEnabled true
     sourceCompatibility JavaVersion.VERSION_1_8
