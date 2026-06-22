@@ -76,6 +76,13 @@ android {
   //  targetCompatibility JavaVersion.VERSION_1_8
 //}
 
+// ✅ KEEP OUTSIDE android created by AI
+configurations.all {
+    resolutionStrategy {
+        force 'androidx.core:core:1.12.0'
+    }
+}
+
 flutter {
     source = "../.."
 }
