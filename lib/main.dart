@@ -33,28 +33,48 @@ class _FactoryFlowAppState extends State<FactoryFlowApp> {
   @override
   void initState() { super.initState(); _bootstrap(); }
 
-  Future<void> _bootstrap() async {
+Future<void> _bootstrap() async {
+  try {
     final theme = await SettingsService.instance.get('theme') ?? 'dark';
     final activated = await SettingsService.instance.isActivated();
-
-    if (activated) {
-      // Run excel cycle check + rotation in background after activation
-      await ExcelService.instance.checkAndRotate();
-    }
 
     if (mounted) {
       setState(() {
         _isDark = theme != 'light';
         _activated = activated;
-        _loading = false;
+        _loading = false; // ✅ UI LOAD FIRST
+      });
+    }
+
+    // ✅ Run heavy task AFTER UI loads
+    if (activated) {
+      _runBackgroundTasks();
+    }
+  } catch (e) {
+    debugPrint("BOOTSTRAP ERROR: $e");
+
+    if (mounted) {
+      setState(() {
+        _loading = false; // NEVER BLOCK UI
       });
     }
   }
+}
 
-  void _onActivated() {
-    setState(() => _activated = true);
-    ExcelService.instance.checkAndRotate();
+  Future<void> _runBackgroundTasks() async {
+  try {
+    await ExcelService.instance
+        .checkAndRotate()
+        .timeout(const Duration(seconds: 10)); // ⛔ prevent freeze
+  } catch (e) {
+    debugPrint("Background task error: $e");
   }
+}
+
+void _onActivated() {
+  setState(() => _activated = true);
+  _runBackgroundTasks(); // ✅ safe call
+}
 
   void _onThemeChanged(bool isDark) {
     setState(() => _isDark = isDark);
