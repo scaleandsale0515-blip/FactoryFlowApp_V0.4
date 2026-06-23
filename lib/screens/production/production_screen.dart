@@ -200,9 +200,28 @@ class _AddEditProductionScreenState extends State<AddEditProductionScreen> {
       await StockService.instance.applyProduction(items);
       await ExcelService.instance.appendProduction(prod, items);
     }
-    await ExcelService.instance.updateStockSheet();
-    if (mounted) Navigator.pop(context);
-  }
+    //await ExcelService.instance.updateStockSheet();
+    //if (mounted) Navigator.pop(context);
+  await ExcelService.instance.updateStockSheet();
+  if (!mounted) return;
+
+  // ✅ STOP LOADING
+  setState(() => _saving = false);
+
+  // ✅ SHOW SUCCESS MESSAGE
+  ScaffoldMessenger.of(context).showSnackBar(
+  const SnackBar(
+    content: Text("Saved Successfully"),
+    backgroundColor: Colors.green,
+    duration: Duration(seconds: 2),
+   ),
+  );
+
+  // ✅ GO BACK AFTER SMALL DELAY (important!)
+  Future.delayed(const Duration(milliseconds: 500), () {
+  if (mounted) Navigator.pop(context, true);
+  });
+}
 
   @override
   Widget build(BuildContext context) {
