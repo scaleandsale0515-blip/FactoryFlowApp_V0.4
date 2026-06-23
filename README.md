@@ -1,4 +1,4 @@
-# FactoryFlowApp_V0.3.1
+# FactoryFlowApp_V0.4
 Full Factory Management Offline System. Specially for precast company.
 Fix loading + save issues
 Fix scroll issue
