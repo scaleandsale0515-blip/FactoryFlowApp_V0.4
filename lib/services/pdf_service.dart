@@ -1,4 +1,3 @@
-// SAME IMPORTS (no change)
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
@@ -8,6 +7,7 @@ import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:pdf_google_fonts/pdf_google_fonts.dart';
 import '../services/settings_service.dart';
 import '../utils/app_theme.dart';
 
@@ -47,8 +47,8 @@ class PdfService {
                     color: Colors.grey.shade400,
                     borderRadius: BorderRadius.circular(2))),
             ListTile(
-              leading: const Icon(Icons.print_rounded,
-                  color: AppColors.primary),
+              leading:
+                  const Icon(Icons.print_rounded, color: AppColors.primary),
               title: const Text('Print / Preview'),
               onTap: () async {
                 Navigator.pop(ctx);
@@ -81,15 +81,9 @@ class PdfService {
   ) async {
     final pdf = pw.Document();
 
-    final orange = PdfColor.fromHex('#FF6B00');
-    final darkBg = PdfColor.fromHex('#1A1A1A');
-    final lightGrey = PdfColor.fromHex('#F5F5F0');
-    final textDark = PdfColor.fromHex('#111111');
-    final textGrey = PdfColor.fromHex('#666666');
-    final green = PdfColor.fromHex('#22C55E');
+    final font = await PdfGoogleFonts.notoSansRegular(); // ✅ FIX ₹
 
     final company = s['company_name'] ?? 'FactoryFlow';
-    final gst = s['gst_number'] ?? '';
     final addr = s['address'] ?? '';
     final phone = s['phone'] ?? '';
     final pt = s['payment_terms'] ?? '';
@@ -112,69 +106,75 @@ class PdfService {
 
     pdf.addPage(
       pw.Page(
+        theme: pw.ThemeData.withFont(base: font), // ✅ font applied
         pageFormat: PdfPageFormat.a4,
-        margin: const pw.EdgeInsets.all(28),
+        margin: const pw.EdgeInsets.all(24),
         build: (ctx) => pw.Column(
           crossAxisAlignment: pw.CrossAxisAlignment.start,
           children: [
 
             // HEADER
-            pw.Container(
-              padding: const pw.EdgeInsets.all(18),
-              decoration: pw.BoxDecoration(
-                color: darkBg,
-                borderRadius: pw.BorderRadius.circular(8),
-              ),
-              child: pw.Row(
-                mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                children: [
-                  pw.Row(children: [
-                    if (logo != null) ...[
-                      pw.Image(logo, width: 46, height: 46),
-                      pw.SizedBox(width: 12)
+            pw.Row(
+              mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+              children: [
+                pw.Row(children: [
+                  if (logo != null) pw.Image(logo, width: 50),
+                  pw.SizedBox(width: 10),
+                  pw.Column(
+                    crossAxisAlignment: pw.CrossAxisAlignment.start,
+                    children: [
+                      pw.Text(company,
+                          style: pw.TextStyle(
+                              fontSize: 18,
+                              fontWeight: pw.FontWeight.bold)),
+                      if (addr.isNotEmpty) pw.Text(addr),
+                      if (phone.isNotEmpty) pw.Text(phone),
                     ],
-                    pw.Column(
-                      crossAxisAlignment: pw.CrossAxisAlignment.start,
-                      children: [
-                        pw.Text(company,
-                            style: pw.TextStyle(
-                                fontSize: 20,
-                                fontWeight: pw.FontWeight.bold,
-                                color: PdfColors.white)),
-                        if (addr.isNotEmpty)
-                          pw.Text(addr,
-                              style: pw.TextStyle(
-                                  fontSize: 8, color: textGrey)),
-                        if (phone.isNotEmpty)
-                          pw.Text(phone,
-                              style: pw.TextStyle(
-                                  fontSize: 8, color: textGrey)),
-                      ],
-                    ),
-                  ]),
-                  pw.Text(docNum ?? '',
-                      style: pw.TextStyle(color: PdfColors.white)),
-                ],
-              ),
+                  ),
+                ]),
+                pw.Text(isQ ? "QUOTATION" : "INVOICE",
+                    style: pw.TextStyle(
+                        fontSize: 18,
+                        fontWeight: pw.FontWeight.bold)),
+              ],
             ),
 
             pw.SizedBox(height: 20),
 
-            pw.Text('Customer: $custName'),
-            if (custPhone.isNotEmpty) pw.Text('Phone: $custPhone'),
+            // CUSTOMER
+            pw.Text("Customer: $custName"),
+            if (custPhone.isNotEmpty) pw.Text("Phone: $custPhone"),
 
             pw.SizedBox(height: 20),
 
-            ...items.map((e) => pw.Text(
-                "${e['service_name']} - ₹${e['amount']}")),
+            // TABLE
+            pw.Table.fromTextArray(
+              headers: ['Item', 'Qty', 'Rate', 'Amount'],
+              data: items.map((e) {
+                final qty = e['qty'] ?? 1;
+                final rate = e['rate'] ?? e['amount'] ?? 0;
+                final total = qty * rate;
+                return [
+                  e['service_name'] ?? '',
+                  qty.toString(),
+                  '₹ $rate',
+                  '₹ $total'
+                ];
+              }).toList(),
+            ),
 
             pw.SizedBox(height: 20),
 
-            pw.Text("Total: ₹${doc['total']}",
+            // TOTAL
+            pw.Align(
+              alignment: pw.Alignment.centerRight,
+              child: pw.Text(
+                "Total: ₹ ${doc['total']}",
                 style: pw.TextStyle(
-                    fontSize: 16,
-                    fontWeight: pw.FontWeight.bold,
-                    color: green)),
+                    fontSize: 14,
+                    fontWeight: pw.FontWeight.bold),
+              ),
+            ),
 
             pw.SizedBox(height: 20),
 
@@ -182,7 +182,7 @@ class PdfService {
             if (pt.isNotEmpty) ...[
               pw.Text("Payment Terms",
                   style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
-              pw.Text(pt),
+              ...pt.split('\n').map((e) => pw.Bullet(text: e)),
             ],
 
             pw.SizedBox(height: 10),
@@ -191,24 +191,21 @@ class PdfService {
             if (tc.isNotEmpty) ...[
               pw.Text("Terms & Conditions",
                   style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
-              pw.Text(tc),
+              ...tc.split('\n').map((e) => pw.Bullet(text: e)),
             ],
 
             pw.Spacer(),
 
             pw.Center(
-              child: pw.Text(
-                "Thank you for your business!",
-                style: pw.TextStyle(fontSize: 10, color: textGrey),
-              ),
+              child: pw.Text("Thank you for your business!",
+                  style: pw.TextStyle(fontSize: 10)),
             ),
           ],
         ),
       ),
     );
 
-    final bytes = await pdf.save();
-    return Uint8List.fromList(bytes);
+    return pdf.save();
   }
 
   String _fmtDate(dynamic d) {
