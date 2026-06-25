@@ -14,14 +14,22 @@ class ExcelService {
     final company = (await SettingsService.instance.get('company_name') ?? 'FactoryFlow')
         .replaceAll(RegExp(r'[^\w]'), '_');
 
+    //final folder = '/storage/emulated/0/${company}_FactoryFlow_Data';
     final folder = '/storage/emulated/0/${company}_FactoryFlow_Data';
-
-    try {
-      await Directory(folder).create(recursive: true);
-      return folder;
-    } catch (_) {
-      return (await getExternalStorageDirectory() ?? await getTemporaryDirectory()).path;
-    }
+   // ensure folder exists
+   final dir = Directory(folder);
+   if (!await dir.exists()) {
+    await dir.create(recursive: true);
+     }
+    return folder;
+  //final filePath = '$folder/$fileName';
+  //await File(filePath).writeAsBytes(excel.encode()!);
+   // try {
+   //   await Directory(folder).create(recursive: true);
+   //   return folder;
+   // } catch (_) {
+   //   return (await getExternalStorageDirectory() ?? await getTemporaryDirectory()).path;
+    //}
   }
 
   Future<String?> _activePath() async {
