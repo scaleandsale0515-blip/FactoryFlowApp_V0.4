@@ -81,7 +81,34 @@ Future<void> _bootstrap() async {
   } else {
     await storage.getAppFolder();
   }
+}
+
   
+// NEW CODE FOR """""""  RESTORE DATA  """"""""""
+  void _showRestoreDialog() {
+  showDialog(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: const Text("Restore Data"),
+      content: const Text("Old data found! Do you want to restore it?"),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context),
+          child: const Text("No"),
+        ),
+        ElevatedButton(
+          onPressed: () async {
+            Navigator.pop(context);
+
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text("Data restored")),
+            );
+          },
+          child: const Text("Yes"),
+        ),
+      ],
+    ),
+  );
 }
 
   Future<void> _runBackgroundTasks() async {
