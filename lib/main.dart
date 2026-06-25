@@ -59,6 +59,29 @@ Future<void> _bootstrap() async {
       });
     }
   }
+
+    // ✅ ADD THIS BELOW NEW CODEEEEE
+  final storage = StorageService.instance;
+
+  final hasPermission = await storage.requestPermission();
+
+  if (!hasPermission) {
+    if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Storage permission required")),
+      );
+    }
+    return;
+  }
+
+  final exists = await storage.checkOldDataExists();
+
+  if (exists) {
+    if (mounted) _showRestoreDialog();
+  } else {
+    await storage.getAppFolder();
+  }
+  
 }
 
   Future<void> _runBackgroundTasks() async {
