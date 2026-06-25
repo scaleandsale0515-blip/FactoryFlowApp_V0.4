@@ -63,7 +63,13 @@ class _AppShellState extends State<AppShell> {
 
   void _showMoreMenu() {
     showModalBottomSheet(context: context, shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(16))),
-      builder: (ctx) => SafeArea(child: Column(mainAxisSize: MainAxisSize.min, children: [
+      //builder: (ctx) => SafeArea(child: Column(mainAxisSize: MainAxisSize.min, children: [
+        builder: (ctx) => SafeArea(
+      child: SizedBox(
+        height: MediaQuery.of(context).size.height * 0.7, // 👈 IMPORTANT
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
         _handle(),
         _MenuTile(icon: Icons.shopping_cart_rounded, color: AppColors.info, label: AppStrings.get('purchase'), onTap: () { Navigator.pop(ctx); Navigator.push(context, MaterialPageRoute(builder: (_) => Scaffold(appBar: AppBar(title: Text(AppStrings.get('purchase'))), body: const PurchaseScreen()))); }),
         _MenuTile(icon: Icons.people_rounded, color: AppColors.accent, label: AppStrings.get('workers'), onTap: () { Navigator.pop(ctx); Navigator.push(context, MaterialPageRoute(builder: (_) => Scaffold(appBar: AppBar(title: Text(AppStrings.get('workers'))), body: const WorkersScreen()))); }),
@@ -84,7 +90,13 @@ class _AppShellState extends State<AppShell> {
 
   void _showQuickAdd() {
     showModalBottomSheet(context: context, shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(16))),
-      builder: (ctx) => SafeArea(child: Column(mainAxisSize: MainAxisSize.min, children: [
+     // builder: (ctx) => SafeArea(child: Column(mainAxisSize: MainAxisSize.min, children: [
+        builder: (ctx) => SafeArea(
+      child: SizedBox(
+        height: MediaQuery.of(context).size.height * 0.7, // 👈 IMPORTANT
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
         _handle(),
         Padding(padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4), child: Text('Quick Add', style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 16))),
         _MenuTile(icon: Icons.factory_rounded, color: AppColors.accent, label: AppStrings.get('add_production'), onTap: () { Navigator.pop(ctx); Navigator.push(context, MaterialPageRoute(builder: (_) => const AddEditProductionScreen())); }),
