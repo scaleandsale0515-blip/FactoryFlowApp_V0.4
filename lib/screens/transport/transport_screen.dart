@@ -223,7 +223,7 @@ class _AddEditTransportScreenState extends State<AddEditTransportScreen> {
   );
 
   // ✅ GO BACK AFTER SMALL DELAY (important!)
-  Future.delayed(const Duration(milliseconds: 500), () {
+  Future.delayed(const Duration(milliseconds: 100), () {
   if (mounted) Navigator.pop(context, true);
   });
 }
