@@ -218,7 +218,7 @@ class _AddEditProductionScreenState extends State<AddEditProductionScreen> {
   );
 
   // ✅ GO BACK AFTER SMALL DELAY (important!)
-  Future.delayed(const Duration(milliseconds: 500), () {
+  Future.delayed(const Duration(milliseconds: 100), () {
   if (mounted) Navigator.pop(context, true);
   });
 }
