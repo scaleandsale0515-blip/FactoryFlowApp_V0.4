@@ -487,7 +487,7 @@ class _EditTransportEntryState extends State<_EditTransportEntry> {
       'rent': double.tryParse(_rentCtrl.text) ?? 0,
     }, where: 'id=?', whereArgs: [widget.trip['id']]);
     await ExcelService.instance.updateStockSheet();
-    if (mounted) Navigator.pop(context);
+    if (mounted) Navigator.pop(context, true);
   }
 
   @override
