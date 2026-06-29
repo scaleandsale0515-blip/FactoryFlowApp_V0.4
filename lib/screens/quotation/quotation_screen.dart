@@ -194,7 +194,7 @@ class _AddQuotationScreenState extends State<AddQuotationScreen> {
     }
     final q = (await db.query('quotations', where: 'id=?', whereArgs: [qId])).first;
     await ExcelService.instance.appendQuotation(q, savedItems);
-    if (mounted) Navigator.pop(context);
+    if (mounted) Navigator.pop(context, true);
   }
 
   @override
