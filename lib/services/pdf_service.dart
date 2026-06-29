@@ -157,8 +157,8 @@ class PdfService {
                 return [
                   e['service_name'] ?? '',
                   qty.toString(),
-                  '₹ $rate',
-                  '₹ $total'
+                  'Rs. $rate',
+                  'Rs. $total'
                 ];
               }).toList(),
             ),
@@ -169,7 +169,7 @@ class PdfService {
             pw.Align(
               alignment: pw.Alignment.centerRight,
               child: pw.Text(
-                "Total: ₹ ${doc['total']}",
+                "Total: Rs. ${doc['total']}",
                 style: pw.TextStyle(
                     fontSize: 14,
                     fontWeight: pw.FontWeight.bold),
