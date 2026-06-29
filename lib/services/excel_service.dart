@@ -223,7 +223,7 @@ class ExcelService {
 
     excel.delete('Stock');
 
-    final sheet = excel['Stock'];
+    final sheet = excel['Stock']!;
 
     sheet.appendRow(['Product','Size','Quantity']);
 
@@ -316,7 +316,7 @@ class ExcelService {
   return r.isEmpty ? null : r.first;
 }
 
-  Future<Map<String, List<List<dynamic>>>> readForView(String path) async {
+Future<Map<String, List<List<dynamic>>>> readForView(String path) async {
   final excel = await _readFile(path);
   if (excel == null) return {};
 
@@ -327,11 +327,16 @@ class ExcelService {
     if (sheet == null) continue;
 
     data[table] = sheet.rows.map((row) {
-      return row.map((cell) => cell?.value).toList();
-    }).toList();
+      // ✅ FIX: make each row modifiable
+      return List<dynamic>.from(
+        row.map((cell) => cell?.value),
+      );
+    }).map((row) => List<dynamic>.from(row)).toList();
   }
 
   return data;
 }
   
 }
+
+
